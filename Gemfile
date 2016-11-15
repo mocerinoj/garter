@@ -14,6 +14,7 @@ gem 'slim'
 gem 'awesome_print'
 gem 'httparty'
 gem 'whois-parser'
+gem 'airbrake', '~> 5.6'
 # gem 'redis', '~> 3.0'
 
 group :development, :test do
