@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  domain: one
+  timestamp: 2016-11-12 08:58:03
+  speed_score: 1
+  usability_score: 1
+  has_viewport: false
+  test: 
+
+two:
+  domain: two
+  timestamp: 2016-11-12 08:58:03
+  speed_score: 1
+  usability_score: 1
+  has_viewport: false
+  test: 

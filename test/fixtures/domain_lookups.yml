@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  domain: one
+  timestamp: 2016-11-12 09:20:29
+  nameservers: 
+  a_record: MyString
+  mx_record: MyString
+
+two:
+  domain: two
+  timestamp: 2016-11-12 09:20:29
+  nameservers: 
+  a_record: MyString
+  mx_record: MyString

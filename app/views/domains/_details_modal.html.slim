@@ -1,0 +1,115 @@
+h3
+  - if domain.status != '0'
+    i.fa.fa-times-circle.text-danger
+    | &nbsp;
+  = @domain.name
+.row
+  .col-sm-4
+    strong.d-block Plesk Server
+    a[href="https://#{@domain.plesk_server.host}:8443/"] = @domain.plesk_server.host
+    small.d-block = @domain.plesk_server.primary_ip.to_s
+  .col-sm-4
+    strong.d-block Hosting
+    span.tag.tag-pill.tag-primary = @domain.hosting_type
+    - if @domain.redirect_to.present?
+      .small
+        i.fa.fa-arrow-circle-o-right
+        | &nbsp;
+        a[href="#{@domain.redirect_to}" target="goto_domain"] = truncate(@domain.redirect_to, length: 30)
+    - if @domain.is_ssl
+      .text-success
+        i.fa.fa-lock
+        | &nbsp;SSL Installed
+  - if @domain.ftp_username.present?
+    .col-sm-4
+      strong.d-block FTP
+      span u:
+      | &nbsp;
+      code = @domain.ftp_username
+      br
+      span p:
+      | &nbsp;
+      code = @domain.ftp_password
+  .col-sm-4
+    strong.d-block Timeline
+    div
+      .tag.tag-default = @domain.plesk_created_date.strftime('%D')
+      | &nbsp;created
+    div
+      .tag.tag-default = @domain.last_updated_at.strftime('%D')
+      | &nbsp;plesk sync
+
+hr
+h4 DNS Information
+- if @domain.last_lookup
+  em.text-muted Last lookup happened at #{domain.last_lookup.timestamp.strftime('%D %r')}
+  .row
+    .col-sm-4
+      strong.d-block Nameservers
+      = format_nameservers(@domain.last_lookup.nameservers)
+    .col-sm-4
+      strong.d-block Hosting Record
+      = @domain.last_lookup.a_record
+    .col-sm-4
+      strong.d-block Mail Record
+      = @domain.last_lookup.mx_record
+- else
+  em.text-muted No data available yet
+hr
+h4 Domain Stats
+- if @domain.last_stat
+  em.text-muted Last stats report gathered at #{domain.last_stat.timestamp.strftime('%D %r')}
+  .row
+    .col-xs-6
+      .tag.tag-primary = format_mb(@domain.last_stat[:total_size])
+      | &nbsp;Total
+      br
+      .tag.tag-default = format_mb(@domain.last_stat[:disk_usage]['logs'].to_i)
+      | &nbsp;Logs
+      br
+      .tag.tag-default = format_mb(@domain.last_stat[:disk_usage]['dbases'].to_i)
+      | &nbsp;Databases
+      br
+      .tag.tag-default = format_mb(@domain.last_stat[:disk_usage]['httpdocs'].to_i)
+      | &nbsp;httpdocs
+      br
+      .tag.tag-default = format_mb(@domain.last_stat[:disk_usage]['mailboxes'].to_i)
+      | &nbsp;Mailboxes
+      br
+      .tag.tag-default = format_mb(@domain.last_stat[:disk_usage]['subdomains'].to_i)
+      | &nbsp;Subdomains
+    .col-xs-6
+      .tag.tag-primary = format_mb(@domain.last_stat[:stat]['traffic'].to_i)
+      | &nbsp;Traffic
+      br
+      .tag.tag-default = @domain.last_stat[:stat]['db']
+      | &nbsp;Databases
+      br
+      .tag.tag-default = @domain.last_stat[:stat]['domains']
+      | &nbsp;Domains
+      br
+      .tag.tag-default = @domain.last_stat[:stat]['redir']
+      | &nbsp;Redirects
+      br
+      .tag.tag-default = @domain.last_stat[:stat]['subdom']
+      | &nbsp;Subdomains
+- else
+  em.text-muted No data available yet
+/hr
+/h4 PageSpeed Test
+/- if @domain.last_pagespeed_test
+  em.text-muted Last test run at #{domain.last_pagespeed_test.timestamp.strftime('%D %r')}
+  .row
+    .col-sm-3
+      h5
+        = @domain.last_pagespeed_test.speed_score
+        | &nbsp;
+        .tag.tag-default Speed Score
+      h5
+        = @domain.last_pagespeed_test.usability_score
+        | &nbsp;
+        .tag.tag-default Usability Score
+    .col-sm-9
+      span rules
+/- else
+  em.text-muted No data available yet

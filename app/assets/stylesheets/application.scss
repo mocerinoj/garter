@@ -1,0 +1,11 @@
+$fa-font-path: "fontawesome/fonts/";
+
+@import "bootstrap/scss/_variables";
+@import "bootstrap/scss/bootstrap-flex";
+@import "fontawesome/scss/font-awesome";
+@import "*";
+
+/*@import "*";*/
+body {
+  padding-top: 54px;
+}

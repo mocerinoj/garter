@@ -1,0 +1,33 @@
+= CSV.generate_line(['Domain',
+                     'Created',
+                     'Server',
+                     'SSL?',
+                     'Traffic',
+                     'Files',
+                     'Responsive?',
+                     'Speed Score',
+                     'Usability Score',
+                     'Nameservers',
+                     'A Record',
+                     'MX Record'])
+- @domains.each do |domain|
+  - data = [domain.name,
+            domain.plesk_created_date,
+            domain.plesk_server.host,
+            domain.is_ssl]
+  - if domain.last_stat
+    - data.concat([format_mb(domain.last_stat.stat['traffic'].to_i),
+                   format_mb(domain.last_stat.disk_usage['httpdocs'].to_i)])
+  - else
+    - data.concat(['', ''])
+  - if domain.last_pagespeed_test
+    - data.concat([domain.last_pagespeed_test.has_viewport,
+                   domain.last_pagespeed_test.speed_score,
+                   domain.last_pagespeed_test.usability_score])
+  - else
+    - data.concat(['', '', ''])
+  - if domain.last_lookup
+    - data.concat([format_nameservers(domain.last_lookup.nameservers),
+                   domain.last_lookup.a_record,
+                   domain.last_lookup.mx_record])
+  = CSV.generate_line(data).html_safe

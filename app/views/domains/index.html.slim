@@ -1,0 +1,5 @@
+br
+= render 'modal'
+
+- Rails.cache.fetch("domains/#{Time.current.to_i}/domains_table", expires_in: 24.hours) do
+  = render 'domains_table'
