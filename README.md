@@ -1,24 +1,38 @@
-# README
+# Garter - A Mutli-Server Plesk Admin Tool
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Garter connects multiple Plesk servers together in one interface to help manage administrative tasks.
 
-Things you may want to cover:
+## Dev environment
 
-* Ruby version
+### Do the usual Rails things
 
-* System dependencies
+```
+$ cd ~/code/garter
+$ rbenv install 2.3.1
+$ rbenv local 2.3.1
+$ bundle install
+$ bower install
+```
 
-* Configuration
+### Setup the database
 
-* Database creation
+```
+$ cp .env.example .env
+```
 
-* Database initialization
+Examine the file and edit as necessary.
 
-* How to run the test suite
+### Add your server(s)
 
-* Services (job queues, cache servers, search engines, etc.)
+Now with your server(s) setup in the db, populate the domains and assoicated data:
 
-* Deployment instructions
-
-* ...
+```
+$ rails c
+\> PleskServer.create!(host: 'my-web-server.com')
+\> exit
+$ rake plesk:sync_servers
+$ rake plesk:sync_domains
+$ rake plesk:domain_stats
+$ rake domains:lookup
+$ rake domains:pagespeed_test
+```
