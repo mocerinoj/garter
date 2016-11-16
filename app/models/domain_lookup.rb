@@ -11,6 +11,7 @@ class DomainLookup < ApplicationRecord
   has_one :plesk_server, through: :domain
 
   scope :tnt_hosted, -> { where(a_record: TNT_PLESK_IPS) }
+  scope :recent_last_two, -> { where('timestamp > ?', 3.weeks.ago).order(timestamp: :desc).limit(2) }
   # scope :tnt_hosted, -> { where("a_record = host(plesk_servers.primary_ip)") }
 
   def tnt_hosted?

@@ -3,6 +3,7 @@ class Domain < ApplicationRecord
 
   has_many :domain_lookups
   has_many :pagespeed_tests
+  has_many :domain_stats
 
   has_one :last_lookup, -> { order(timestamp: :desc) }, class_name: :DomainLookup
   has_one :last_pagespeed_test, -> { order(timestamp: :desc) }, class_name: :PagespeedTest
@@ -33,6 +34,13 @@ class Domain < ApplicationRecord
     active.hosted.
     includes(:plesk_server, :last_lookup, :last_pagespeed_test).
     where(domain_lookups: { a_record: DomainLookup::TNT_PLESK_IPS })
+  end
+
+  def hosting_changed?
+    lookups = domain_lookups.recent_last_two
+    return false unless lookups.count == 2 && lookups.first.a_record != lookups.last.a_record && lookups.last.tnt_hosted?
+
+    lookups.first.a_record.present?
   end
 
   private
