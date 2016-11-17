@@ -19,8 +19,8 @@ tr
       td[data-order="#{domain.last_stat.stat['traffic']}"] = format_mb(domain.last_stat.stat['traffic'].to_i)
       td[data-order="#{domain.last_stat.disk_usage['httpdocs'].to_i}"] = format_mb(domain.last_stat.disk_usage['httpdocs'].to_i)
     - else
-      td
-      td
+      td[data-na='traffic']
+      td[data-na='files']
   td = icon_for_boolean(domain.is_ssl)
   - cache domain.last_pagespeed_test do
     - if domain.last_pagespeed_test
@@ -28,13 +28,13 @@ tr
       td = domain.last_pagespeed_test.usability_score
       td = icon_for_boolean(domain.last_pagespeed_test.has_viewport)
     - else
-      td
-      td
-      td
+      td[data-na='speed_score']
+      td[data-na='usability_score']
+      td[data-na='has_viewport']
   - cache domain.last_lookup do
     - if domain.last_lookup
       td = icon_for_boolean(domain.last_lookup.tnt_hosted?)
       td = icon_for_boolean(domain.last_lookup.tnt_hosted_mail?)
     - else
-      td
-      td
+      td[data-na='tnt_hosted']
+      td[data-na='tnt_hosted_mail']
