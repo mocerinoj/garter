@@ -16,7 +16,7 @@ class Domain < ApplicationRecord
   scope :non_ssl, -> { where.not(is_ssl: true) }
   scope :responsive, -> { includes(:last_pagespeed_test).where(pagespeed_tests: { has_viewport: true } ) }
 
-  after_create :get_stats, :run_tests
+  after_create :get_stats, :run_tests, if: :hosted?
 
   def self.lookupable
     active.hosted.where.not(id: DomainLookup.where("timestamp > ?", 7.days.ago).pluck(:domain_id))
@@ -41,6 +41,10 @@ class Domain < ApplicationRecord
     return false unless lookups.count == 2 && lookups.first.a_record != lookups.last.a_record && lookups.last.tnt_hosted?
 
     lookups.first.a_record.present?
+  end
+
+  def hosted?
+    hosting_type == 'vrt_hst'
   end
 
   private

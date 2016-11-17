@@ -4,10 +4,11 @@ class DomainStatJob < ApplicationJob
   def perform(domain_id)
     domain = Domain.find(domain_id)
 
-    plesk_response = PleskApiClient.new(host: domain.plesk_server.host).get_domain_stats(domain.plesk_id)
-    return unless plesk_response.present? && plesk_response['packet']['webspace'].present?
+    plesk_api = PleskApiClient.new(host: domain.plesk_server.host)
+    plesk_response = plesk_api.get_domain_stats(domain.plesk_id, domain.domain_type)
+    return unless plesk_response.present? && plesk_response['packet'][domain.domain_type].present?
 
-    result = plesk_response['packet']['webspace']['get']['result']['data']
+    result = plesk_response['packet'][domain.domain_type]['get']['result']['data']
 
     DomainStat.create!(domain: domain,
                        timestamp: Time.current,

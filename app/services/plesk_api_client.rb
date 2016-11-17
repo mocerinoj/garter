@@ -63,10 +63,28 @@ eof
     request(request)
   end
 
-  def get_domain_stats(id)
+  def get_sites
     request = <<eof
 <packet>
-  <webspace>
+  <site>
+    <get>
+      <filter>
+      </filter>
+      <dataset>
+        <gen_info/>
+        <hosting/>
+      </dataset>
+    </get>
+  </site>
+</packet>
+eof
+    request(request)
+  end
+
+  def get_domain_stats(id, domain_type)
+    request = <<eof
+<packet>
+  <#{domain_type}>
     <get>
       <filter>
         <id>#{id}</id>
@@ -76,7 +94,7 @@ eof
         <disk_usage/>
       </dataset>
     </get>
-  </webspace>
+  <#{domain_type}>
 </packet>
 eof
     request(request)
@@ -99,6 +117,64 @@ eof
       </dataset>
     </get>
   </webspace>
+</packet>
+eof
+    request(request)
+  end
+
+  def get_domain_by_name(name)
+    request = <<eof
+<packet>
+  <webspace>
+    <get>
+      <filter>
+        <name>#{name}</name>
+      </filter>
+      <dataset>
+        <gen_info/>
+        <hosting/>
+        <prefs/>
+        <stat/>
+        <disk_usage/>
+      </dataset>
+    </get>
+  </webspace>
+</packet>
+eof
+    request(request)
+  end
+
+  def get_site(name)
+    request = <<eof
+<packet>
+  <site>
+    <get>
+      <filter>
+        <name>#{name}</name>
+      </filter>
+      <dataset>
+        <gen_info/>
+      </dataset>
+    </get>
+  </site>
+</packet>
+eof
+    request(request)
+  end
+
+  def get_site(name)
+    request = <<eof
+<packet>
+  <site>
+    <get>
+      <filter>
+      </filter>
+      <dataset>
+        <gen_info/>
+        <hosting/>
+      </dataset>
+    </get>
+  </site>
 </packet>
 eof
     request(request)
