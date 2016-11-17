@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161115000106) do
+ActiveRecord::Schema.define(version: 20161117000444) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,6 +53,8 @@ ActiveRecord::Schema.define(version: 20161115000106) do
     t.datetime "last_updated_at"
     t.date     "plesk_created_date"
     t.jsonb    "last_packet"
+    t.integer  "webspace_id"
+    t.string   "domain_type"
     t.index ["last_updated_at"], name: "index_domains_on_last_updated_at", using: :btree
     t.index ["name"], name: "index_domains_on_name", using: :btree
     t.index ["plesk_server_id"], name: "index_domains_on_plesk_server_id", using: :btree

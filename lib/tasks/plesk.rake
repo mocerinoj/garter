@@ -6,6 +6,7 @@ namespace :plesk do
   task sync_domains: :environment do
     PleskServer.all.each do |plesk_server|
       SyncPleskDomainsJob.perform_now(plesk_server.id)
+      SyncPleskSitesJob.perform_now(plesk_server.id)
     end
   end
 

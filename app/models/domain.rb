@@ -11,12 +11,12 @@ class Domain < ApplicationRecord
 
   scope :hosted, -> { where(hosting_type: 'vrt_hst') }
   scope :redirect, -> { where(hosting_type: 'std_fwd') }
-  scope :active, -> { where(status: '0') }
+  scope :active, -> { where(status: '0').where.not(hosting_type: 'none') }
   scope :ssl, -> { where(is_ssl: true) }
   scope :non_ssl, -> { where.not(is_ssl: true) }
-  scope :responsive, -> { includes(:last_pagespeed_test).where(pagespeed_tests: { has_viewport: true }) }
+  scope :responsive, -> { includes(:last_pagespeed_test).where(pagespeed_tests: { has_viewport: true } ) }
 
-  after_create :get_stats, :run_tests
+  after_create :get_stats, :run_tests, if: :hosted?
 
   def self.lookupable
     active.hosted.where.not(id: DomainLookup.where("timestamp > ?", 7.days.ago).pluck(:domain_id))
@@ -43,14 +43,18 @@ class Domain < ApplicationRecord
     lookups.first.a_record.present?
   end
 
+  def hosted?
+    hosting_type == 'vrt_hst'
+  end
+
   private
 
   def get_stats
-    DomainLookup.perform_now(id)
-    DomainStat.perform_now(id)
+    DomainLookupJob.perform_now(id)
+    DomainStatJob.perform_now(id)
   end
 
   def run_tests
-    PagespeedTest.perform_now(id)
+    PagespeedTestJob.perform_now(id)
   end
 end

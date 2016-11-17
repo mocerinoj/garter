@@ -19,7 +19,8 @@ class SyncPleskDomainsJob < ApplicationJob
                      hosting_type: general_info['htype'],
                      last_updated_at: Time.current,
                      last_packet: plesk_domain['data'],
-                     plesk_created_date: general_info['cr_date'])
+                     plesk_created_date: general_info['cr_date'],
+                     domain_type: 'webspace')
 
       if general_info['htype'] == 'vrt_hst'
         is_ssl = false
