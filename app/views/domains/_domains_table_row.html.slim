@@ -14,27 +14,24 @@ tr
         a[href="#{domain.redirect_to}" target='goto_domain'] = truncate(domain.redirect_to, length: 40)
   td.small: a[href="https://#{domain.plesk_server.host}:8443/" target="#{domain.plesk_server.host}"] = domain.plesk_server.host
   td = domain.plesk_created_date
-  - cache domain.last_stat do
-    - if domain.last_stat
-      td[data-order="#{domain.last_stat.stat['traffic']}"] = format_mb(domain.last_stat.stat['traffic'].to_i)
-      td[data-order="#{domain.last_stat.disk_usage['httpdocs'].to_i}"] = format_mb(domain.last_stat.disk_usage['httpdocs'].to_i)
-    - else
-      td[data-na='traffic']
-      td[data-na='files']
+  - if domain.last_stat
+    td[data-order="#{domain.last_stat.stat['traffic']}"] = format_mb(domain.last_stat.stat['traffic'].to_i)
+    td[data-order="#{domain.last_stat.disk_usage['httpdocs'].to_i}"] = format_mb(domain.last_stat.disk_usage['httpdocs'].to_i)
+  - else
+    td[data-na='traffic']
+    td[data-na='files']
   td = icon_for_boolean(domain.is_ssl)
-  - cache domain.last_pagespeed_test do
-    - if domain.last_pagespeed_test
-      td = domain.last_pagespeed_test.speed_score
-      td = domain.last_pagespeed_test.usability_score
-      td = icon_for_boolean(domain.last_pagespeed_test.has_viewport)
-    - else
-      td[data-na='speed_score']
-      td[data-na='usability_score']
-      td[data-na='has_viewport']
-  - cache domain.last_lookup do
-    - if domain.last_lookup
-      td = icon_for_boolean(domain.last_lookup.tnt_hosted?)
-      td = icon_for_boolean(domain.last_lookup.tnt_hosted_mail?)
-    - else
-      td[data-na='tnt_hosted']
-      td[data-na='tnt_hosted_mail']
+  - if domain.last_pagespeed_test
+    td = domain.last_pagespeed_test.speed_score
+    td = domain.last_pagespeed_test.usability_score
+    td = icon_for_boolean(domain.last_pagespeed_test.has_viewport)
+  - else
+    td[data-na='speed_score']
+    td[data-na='usability_score']
+    td[data-na='has_viewport']
+  - if domain.last_lookup
+    td = icon_for_boolean(domain.last_lookup.tnt_hosted?)
+    td = icon_for_boolean(domain.last_lookup.tnt_hosted_mail?)
+  - else
+    td[data-na='tnt_hosted']
+    td[data-na='tnt_hosted_mail']
