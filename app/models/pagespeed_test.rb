@@ -1,3 +1,3 @@
 class PagespeedTest < ApplicationRecord
-  belongs_to :domain
+  belongs_to :domain, touch: true
 end

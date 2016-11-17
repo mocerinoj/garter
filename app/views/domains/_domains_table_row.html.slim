@@ -1,0 +1,40 @@
+tr
+  td
+    = link_to domain_details_path(id: domain.id), remote: true, 'data-modal': 'domain_details' do
+      i.fa.fa-plus-circle.text-success[data-toggle='tooltip' title='View More Details' data-placement='right']
+    | &nbsp;
+    - if domain.status != '0'
+      i.fa.fa-times-circle.text-danger[data-toggle='tooltip' title='Disabled']
+      | &nbsp;
+    a[href="#{build_domain_url(domain.name, domain.is_ssl)}" target='goto_domain'] = domain.name
+    - if domain.redirect_to.present?
+      div.small
+        i.fa.fa-arrow-circle-o-right
+        | &nbsp;
+        a[href="#{domain.redirect_to}" target='goto_domain'] = truncate(domain.redirect_to, length: 40)
+  td.small: a[href="https://#{domain.plesk_server.host}:8443/" target="#{domain.plesk_server.host}"] = domain.plesk_server.host
+  td = domain.plesk_created_date
+  - cache domain.last_stat do
+    - if domain.last_stat
+      td[data-order="#{domain.last_stat.stat['traffic']}"] = format_mb(domain.last_stat.stat['traffic'].to_i)
+      td[data-order="#{domain.last_stat.disk_usage['httpdocs'].to_i}"] = format_mb(domain.last_stat.disk_usage['httpdocs'].to_i)
+    - else
+      td
+      td
+  td = icon_for_boolean(domain.is_ssl)
+  - cache domain.last_pagespeed_test do
+    - if domain.last_pagespeed_test
+      td = domain.last_pagespeed_test.speed_score
+      td = domain.last_pagespeed_test.usability_score
+      td = icon_for_boolean(domain.last_pagespeed_test.has_viewport)
+    - else
+      td
+      td
+      td
+  - cache domain.last_lookup do
+    - if domain.last_lookup
+      td = icon_for_boolean(domain.last_lookup.tnt_hosted?)
+      td = icon_for_boolean(domain.last_lookup.tnt_hosted_mail?)
+    - else
+      td
+      td

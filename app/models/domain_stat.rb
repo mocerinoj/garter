@@ -1,5 +1,5 @@
 class DomainStat < ApplicationRecord
-  belongs_to :domain
+  belongs_to :domain, touch: true
 
   scope :recent_last_two, -> { where('timestamp > ?', 3.weeks.ago).order(timestamp: :desc).limit(2) }
 

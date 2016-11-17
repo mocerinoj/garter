@@ -26,32 +26,4 @@ table.table.table-hover[border='0' cellspacing='0' cellpadding='0' id='domains_t
       th: i.fa.fa-server[data-toggle='tooltip' title='Hosted with TNT']
       th: i.fa.fa-envelope-o[data-toggle='tooltip' title='Mail with TNT']
   tbody
-    - @domains.each do |domain|
-      tr
-        td
-          = link_to domain_details_path(id: domain.id), remote: true, 'data-modal': 'domain_details' do
-            i.fa.fa-plus-circle.text-success[data-toggle='tooltip' title='View More Details']
-          | &nbsp;
-          - if domain.status != '0'
-            i.fa.fa-times-circle.text-danger[data-toggle='tooltip' title='Disabled']
-            | &nbsp;
-          a[href="#{build_domain_url(domain.name, domain.is_ssl)}" target='goto_domain'] = domain.name
-          - if domain.redirect_to.present?
-            div.small
-              i.fa.fa-arrow-circle-o-right
-              | &nbsp;
-              a[href="#{domain.redirect_to}" target='goto_domain'] = truncate(domain.redirect_to, length: 40)
-        td.small: a[href="https://#{domain.plesk_server.host}:8443/" target="#{domain.plesk_server.host}"] = domain.plesk_server.host
-        td = domain.plesk_created_date
-        - if domain.last_stat
-          td[data-order="#{domain.last_stat.stat['traffic']}"] = format_mb(domain.last_stat.stat['traffic'].to_i)
-          td[data-order="#{domain.last_stat.disk_usage['httpdocs'].to_i}"] = format_mb(domain.last_stat.disk_usage['httpdocs'].to_i)
-        - else
-          td
-          td
-        td = icon_for_boolean(domain.is_ssl)
-        td = domain.last_pagespeed_test.speed_score if domain.last_pagespeed_test
-        td = domain.last_pagespeed_test.usability_score if domain.last_pagespeed_test
-        td = icon_for_boolean(domain.last_pagespeed_test.has_viewport) if domain.last_pagespeed_test
-        td = icon_for_boolean(domain.last_lookup.tnt_hosted?) if domain.last_lookup
-        td = icon_for_boolean(domain.last_lookup.tnt_hosted_mail?) if domain.last_lookup
+    = render partial: 'domains_table_row', collection: @domains, as: :domain, cached: true

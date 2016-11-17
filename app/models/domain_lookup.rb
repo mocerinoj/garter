@@ -6,7 +6,7 @@ class DomainLookup < ApplicationRecord
                    '159.203.114.105',
                    '192.241.187.71']
 
-  belongs_to :domain
+  belongs_to :domain, touch: true
 
   has_one :plesk_server, through: :domain
 
