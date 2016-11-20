@@ -6,7 +6,5 @@ class ApiController < ApplicationController
     return unless domain
 
     redirect_to "https://#{domain.plesk_server.host}:8443/"
-
-    render nothing: true
   end
 end
