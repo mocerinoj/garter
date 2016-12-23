@@ -2,7 +2,7 @@ class DomainsController < ApplicationController
   http_basic_authenticate_with name: ENV['APP_USERNAME'], password: ENV['APP_PASSWORD']
 
   def index
-    @domains = Domain.includes(:plesk_server, :last_lookup, :last_pagespeed_test)
+    @domains = Domain.includes(:plesk_server, :last_lookup, :last_pagespeed_test, :last_stat)
 
     respond_to do |format|
       format.html

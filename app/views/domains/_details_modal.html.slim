@@ -50,7 +50,7 @@ h4 DNS Information
         th A Record
         th MX Record
     tbody
-      - @domain.domain_lookups.each do |lookup|
+      - @domain.domain_lookups.last(5).each do |lookup|
         tr
           td = lookup.timestamp.strftime('%D %r')
           td = format_nameservers(lookup.nameservers)
