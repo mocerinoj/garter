@@ -220,4 +220,29 @@ eof
     request(request)
   end
 
+    def update_ftp_password(id, domain_type, new_password)
+      request = <<eof
+<packet>
+  <site>
+    <set>
+      <filter>
+        <id>#{id}</id>
+      </filter>
+      <values>
+        <hosting>
+          <vrt_hst>
+            <property>
+              <name>ftp_password</name>
+              <value>#{new_password}</value>
+            </property>
+          </vrt_hst>
+        </hosting>
+      </values>
+    </set>
+  </site>
+</packet>
+eof
+    request(request)
+  end
+
 end

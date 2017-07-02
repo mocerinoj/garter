@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161117000444) do
+ActiveRecord::Schema.define(version: 20170702202122) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -60,6 +60,17 @@ ActiveRecord::Schema.define(version: 20161117000444) do
     t.index ["plesk_server_id"], name: "index_domains_on_plesk_server_id", using: :btree
   end
 
+  create_table "events", force: :cascade do |t|
+    t.integer  "domain_id"
+    t.string   "activity"
+    t.jsonb    "data"
+    t.datetime "timestamp",  default: -> { "now()" }, null: false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+    t.index ["activity"], name: "index_events_on_activity", using: :btree
+    t.index ["domain_id"], name: "index_events_on_domain_id", using: :btree
+  end
+
   create_table "pagespeed_tests", force: :cascade do |t|
     t.integer  "domain_id"
     t.datetime "timestamp"
@@ -98,6 +109,7 @@ ActiveRecord::Schema.define(version: 20161117000444) do
   add_foreign_key "domain_lookups", "domains"
   add_foreign_key "domain_stats", "domains"
   add_foreign_key "domains", "plesk_servers"
+  add_foreign_key "events", "domains"
   add_foreign_key "pagespeed_tests", "domains"
   add_foreign_key "plesk_server_stats", "plesk_servers"
 end
