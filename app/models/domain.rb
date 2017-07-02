@@ -4,6 +4,7 @@ class Domain < ApplicationRecord
   has_many :domain_lookups
   has_many :pagespeed_tests
   has_many :domain_stats
+  has_many :events
 
   has_one :last_lookup, -> { order(timestamp: :desc) }, class_name: :DomainLookup
   has_one :last_pagespeed_test, -> { order(timestamp: :desc) }, class_name: :PagespeedTest
