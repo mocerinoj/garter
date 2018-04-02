@@ -11,7 +11,7 @@ html
       .navbar.navbar-fixed-top.navbar-light.bg-faded
         h1.navbar-brand.mb-0 Garter
         .float-sm-right
-          = link_to domains_path(format: :csv), class: 'btn btn-outline-primary' do
+          = link_to domains_path(format: :csv, all: true), class: 'btn btn-outline-primary' do
             i.fa.fa-download
             | &nbsp;All
           | &nbsp;
