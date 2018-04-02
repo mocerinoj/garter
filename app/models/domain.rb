@@ -33,7 +33,7 @@ class Domain < ApplicationRecord
 
   def self.relevant
     active.hosted.
-    reload(:plesk_server, :last_lookup, :last_pagespeed_test).
+    includes(:plesk_server, :last_lookup, :last_pagespeed_test).
     where(domain_lookups: { a_record: DomainLookup::TNT_PLESK_IPS })
   end
 
