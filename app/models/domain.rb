@@ -16,6 +16,26 @@ class Domain < ApplicationRecord
   scope :ssl, -> { where(is_ssl: true) }
   scope :non_ssl, -> { where.not(is_ssl: true) }
   scope :responsive, -> { includes(:last_pagespeed_test).where(pagespeed_tests: { has_viewport: true } ) }
+  scope :include_latest, -> do
+    select(<<~SQL)
+     domains.*,
+     (SELECT stat FROM domain_stats WHERE domain_id = domains.id ORDER BY timestamp DESC LIMIT 1) AS stat,
+     (SELECT disk_usage FROM domain_stats WHERE domain_id = domains.id ORDER BY timestamp DESC LIMIT 1) AS disk_usage,
+     (SELECT speed_score FROM pagespeed_tests WHERE domain_id = domains.id ORDER BY timestamp DESC LIMIT 1) AS speed_score,
+     (SELECT usability_score FROM pagespeed_tests WHERE domain_id = domains.id ORDER BY timestamp DESC LIMIT 1) AS usability_score,
+     (SELECT has_viewport FROM pagespeed_tests WHERE domain_id = domains.id ORDER BY timestamp DESC LIMIT 1) AS has_viewport,
+     (SELECT
+        CASE WHEN a_record IN('#{DomainLookup::TNT_PLESK_IPS.join("','")}') THEN 1
+             ELSE 0
+        END
+      FROM domain_lookups WHERE domain_id = domains.id ORDER BY timestamp DESC LIMIT 1) AS tnt_hosted,
+     (SELECT
+        CASE WHEN mx_record ILIKE '%tntsupport.net%' THEN 1
+             ELSE 0
+        END
+      FROM domain_lookups WHERE domain_id = domains.id ORDER BY timestamp DESC LIMIT 1) AS tnt_hosted_mail
+   SQL
+  end
 
   after_create :get_stats, :run_tests, if: :hosted?
 
@@ -33,8 +53,9 @@ class Domain < ApplicationRecord
 
   def self.relevant
     active.hosted.
-    includes(:plesk_server, :last_lookup, :last_pagespeed_test).
-    where(domain_lookups: { a_record: DomainLookup::TNT_PLESK_IPS })
+    includes(:plesk_server).
+    include_latest.
+    where(tnt_hosted: 1)
   end
 
   def hosting_changed?

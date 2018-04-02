@@ -2,7 +2,13 @@ class DomainsController < ApplicationController
   http_basic_authenticate_with name: ENV['APP_USERNAME'], password: ENV['APP_PASSWORD']
 
   def index
-    @domains = Domain.active.hosted.preload(:plesk_server, :last_lookup, :last_pagespeed_test, :last_stat)
+    params[:all] ||= "false"
+
+    if params[:all] == "true"
+      @domains = Domain.include_latest.includes(:plesk_server)
+    else
+      @domains = Domain.active.hosted.include_latest.includes(:plesk_server)
+    end
 
     respond_to do |format|
       format.html
