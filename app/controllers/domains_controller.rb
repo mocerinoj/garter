@@ -2,7 +2,7 @@ class DomainsController < ApplicationController
   http_basic_authenticate_with name: ENV['APP_USERNAME'], password: ENV['APP_PASSWORD']
 
   def index
-    @domains = Domain.includes(:plesk_server, :last_lookup, :last_pagespeed_test, :last_stat)
+    @domains = Domain.active.hosted.preload(:plesk_server, :last_lookup, :last_pagespeed_test, :last_stat)
 
     respond_to do |format|
       format.html
@@ -17,7 +17,7 @@ class DomainsController < ApplicationController
     @domains = Domain.relevant
 
     respond_to do |format|
-      format.html
+      format.html { render :index }
       format.csv do
         headers['Content-Disposition'] = 'attachment; filename="garter-relevant-list.csv"'
         headers['Content-Type'] ||= 'text/csv'
