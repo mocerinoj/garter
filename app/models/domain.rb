@@ -33,7 +33,10 @@ class Domain < ApplicationRecord
         CASE WHEN mx_record ILIKE '%tntsupport.net%' THEN 1
              ELSE 0
         END
-      FROM domain_lookups WHERE domain_id = domains.id ORDER BY timestamp DESC LIMIT 1) AS tnt_hosted_mail
+      FROM domain_lookups WHERE domain_id = domains.id ORDER BY timestamp DESC LIMIT 1) AS tnt_hosted_mail,
+     (SELECT a_record FROM domain_lookups WHERE domain_id = domains.id ORDER BY timestamp DESC LIMIT 1) AS a_record,
+     (SELECT mx_record FROM domain_lookups WHERE domain_id = domains.id ORDER BY timestamp DESC LIMIT 1) AS mx_record,
+     (SELECT nameservers FROM domain_lookups WHERE domain_id = domains.id ORDER BY timestamp DESC LIMIT 1) AS nameservers
    SQL
   end
 

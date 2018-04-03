@@ -13,11 +13,11 @@ html
         .float-sm-right
           = link_to domains_path(format: :csv, all: true), class: 'btn btn-outline-primary' do
             i.fa.fa-download
-            | &nbsp;All
-          | &nbsp;
-          = link_to relevant_domains_path(format: :csv), class: 'btn btn-outline-primary' do
-            i.fa.fa-download
-            | &nbsp;Hosted Only
+            | &nbsp;Download All
+          / | &nbsp;
+          / = link_to relevant_domains_path(format: :csv), class: 'btn btn-outline-primary' do
+          /   i.fa.fa-download
+          /   | &nbsp;Hosted Only
         - if notice.present?
           .tag.tag-pill.tag-primary.float-xs-right = notice
 

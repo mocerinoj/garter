@@ -2,20 +2,22 @@
                      'Created',
                      'Server',
                      'SSL?',
+                     'Status',
                      'Traffic',
                      'Files',
                      'Responsive?',
                      'Speed Score',
-                     'Usability Score'])
-                     /'Nameservers',
-                     /'A Record',
-                     /'MX Record'
+                     'Usability Score',
+                     'Nameservers',
+                     'A Record',
+                     'MX Record'])
 
 - @domains.each do |domain|
   - data = [domain.name,
             domain.plesk_created_date,
             domain.plesk_server.host,
-            domain.is_ssl]
+            domain.is_ssl,
+            domain.status]
   - if domain.stat.present?
     - data.concat([format_mb(domain.stat['traffic'].to_i),
                    format_mb(domain.disk_usage['httpdocs'].to_i)])
@@ -27,8 +29,10 @@
                    domain.usability_score])
   - else
     - data.concat(['', '', ''])
-  / - if domain.last_lookup
-  /   - data.concat([format_nameservers(domain.last_lookup.nameservers),
-  /                  domain.last_lookup.a_record,
-  /                  domain.last_lookup.mx_record])
+  - if domain.a_record.present?
+    - data.concat([format_nameservers(domain.nameservers),
+                   domain.a_record,
+                   domain.mx_record])
+  - else
+    - data.concat(['', '', ''])
   = CSV.generate_line(data).html_safe
