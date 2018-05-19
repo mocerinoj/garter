@@ -1,8 +1,8 @@
 class WeeklyReportMailer < ApplicationMailer
   def admin_report
-    @active_domains = Domain.active.hosted
+    @active_domains = Domain.active.hosted.includes(:domain_stats, :domain_lookups)
     @domain_hosting_changed = @active_domains.select { |d| d.hosting_changed? }
 
-    mail(to: 'joe@tntdental.com', subject: 'Garter - Weekly Admin Report')
+    mail(to: ENV["ADMIN_EMAILS"], subject: 'Garter - Weekly Admin Report')
   end
 end
