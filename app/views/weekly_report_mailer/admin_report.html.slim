@@ -17,17 +17,5 @@ h3 Hosting Changes
           td: strong = lookups.first.a_record
           td = format_nameservers(lookups.first.nameservers)
 - else
-  p: em no changes this week
+  p: em no changes
 
-h3 Domain Stat Concerns
-ul
-  - @active_domains.each do |domain|
-    - stats = domain.domain_stats.recent_last_two
-    - next unless stats.count == 2 && (stats.disk_space_concern? || stats.traffic_concern?)
-    li
-      strong = domain.name
-      ul
-        - if stats.disk_space_concern?
-          li #{number_to_percentage(stats.compare_disk_usage, precision: 0)} change in disk usage
-        - if stats.traffic_concern?
-          li #{number_to_percentage(stats.compare_traffic, precision: 0)} change in traffic

@@ -6,12 +6,12 @@ class DomainLookupJob < ApplicationJob
   def perform(domain_id)
     domain = Domain.find(domain_id)
 
+    nameservers = nil
     begin
       whois = Whois.whois(domain.name)
+      nameservers = whois.parser.nameservers
     rescue
-      return
     end
-    nameservers = whois.parser.nameservers
 
     a_record = nil
     mx_record = nil
