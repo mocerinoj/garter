@@ -11,6 +11,7 @@ class DomainLookupJob < ApplicationJob
       whois = Whois.whois(domain.name)
       nameservers = whois.parser.nameservers
     rescue
+      return
     end
 
     a_record = nil
