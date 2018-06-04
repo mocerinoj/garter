@@ -1,4 +1,5 @@
 = CSV.generate_line(['Domain',
+                     'Status',
                      'Created',
                      'Server',
                      'SSL?',
@@ -14,6 +15,7 @@
 
 - @domains.each do |domain|
   - data = [domain.name,
+            domain.human_status,
             domain.plesk_created_date,
             domain.plesk_server.host,
             domain.is_ssl,

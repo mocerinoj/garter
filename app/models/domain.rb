@@ -72,6 +72,24 @@ class Domain < ApplicationRecord
     hosting_type == 'vrt_hst'
   end
 
+  def suspended?
+    !disabled && !active?
+  end
+
+  def disabled?
+    status == "18"
+  end
+
+  def active?
+    status == "0"
+  end
+
+  def human_status
+    return "active" if active?
+    return "disabled" if disabled?
+    "suspended"
+  end
+
   private
 
   def get_stats
